@@ -1,24 +1,74 @@
-# Compiled class file
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Package Files
 *.jar
 *.war
-*.nar
 *.ear
-*.zip
-*.tar.gz
-*.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# Maven
+target/
+
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# Temporary files
+*.swp
+*.tmp
+*.temp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Docker
+*.env
+docker-compose.override.yml
+
+# Kubernetes
+#kubernetes/*.yaml
+
+# Prometheus and Grafana
+#grafana/dashboards/*.json
+#grafana/datasources/*.yaml
+#prometheus.yml
+
+# Test reports
+/test-output/
+/surefire-reports/
+
+# Node modules (if any frontend integration is added)
+node_modules/
+
+# Other
+*.bak
+*.old
+*.orig
+*.rej
+*.patch
+*.diff
+*.min.*
+*.min.js
+*.min.css
+*.min.html
+*.min.xml
+*.min.json
+*.min.yaml
+*.min.yml
+*.min.properties
+*.min.md
+*.min.txt
+*.hprof

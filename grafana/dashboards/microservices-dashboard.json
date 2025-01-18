@@ -1,0 +1,143 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "microservices-dashboard",
+    "title": "Microservices Monitoring Dashboard",
+    "tags": ["microservices", "monitoring"],
+    "timezone": "browser",
+    "schemaVersion": 32,
+    "version": 1,
+    "refresh": "5s",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "CPU Usage",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(container_cpu_usage_seconds_total{image!=''}[5m])",
+            "legendFormat": "{{pod}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Memory Usage",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{image!=''}",
+            "legendFormat": "{{pod}}",
+            "refId": "B"
+          }
+        ],
+        "gridPos": {
+          "x": 12,
+          "y": 0,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "type": "table",
+        "title": "Service Dependency Status",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "up",
+            "legendFormat": "{{job}}",
+            "refId": "C"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 8,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Active Alerts",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "ALERTS{alertstate='firing'}",
+            "legendFormat": "{{alertname}}",
+            "refId": "D"
+          }
+        ],
+        "gridPos": {
+          "x": 12,
+          "y": 8,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Request Rate (per second)",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{method}} {{status}}",
+            "refId": "E"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 16,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "type": "heatmap",
+        "title": "Latency Distribution",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+            "refId": "F"
+          }
+        ],
+        "gridPos": {
+          "x": 12,
+          "y": 16,
+          "w": 12,
+          "h": 8
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "type": "query",
+          "datasource": "Prometheus",
+          "name": "namespace",
+          "label": "Namespace",
+          "query": "label_values(kube_pod_info, namespace)",
+          "multi": true,
+          "includeAll": true
+        },
+        {
+          "type": "query",
+          "datasource": "Prometheus",
+          "name": "pod",
+          "label": "Pod",
+          "query": "label_values(kube_pod_info, pod)",
+          "multi": true,
+          "includeAll": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+plugins {
+    id 'org.springframework.boot' version '3.1.2'
+    id 'io.spring.dependency-management' version '1.1.3'
+    id 'java'
+}
+
+group = 'com.cloudnativeplayground'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starter Dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0' // Replace with the latest version
+    implementation 'com.h2database:h2'
+
+
+    // Prometheus Integration
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // Spring Boot DevTools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Kubernetes Client (Optional, for advanced use cases)
+    implementation 'io.fabric8:kubernetes-client:6.6.2'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+bootJar {
+    archiveBaseName.set("microservices-monitoring-dashboard")
+    archiveVersion.set(version)
+    manifest {
+        attributes 'Main-Class': 'com.cloudnativeplayground.microservicesmonitoringdashboard.MicroservicesMonitoringDashboardApplication'
+    }
+}

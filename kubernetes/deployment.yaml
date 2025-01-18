@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservices-monitoring-dashboard
+  namespace: monitoring
+  labels:
+    app: microservices-monitoring-dashboard
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: microservices-monitoring-dashboard
+  template:
+    metadata:
+      labels:
+        app: microservices-monitoring-dashboard
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+        - name: microservices-monitoring-dashboard
+          image: cloudnativeplayground/microservices-monitoring-dashboard:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: GRAFANA_URL
+              value: "http://grafana.monitoring.svc.cluster.local:3000"
+            - name: PROMETHEUS_URL
+              value: "http://prometheus.monitoring.svc.cluster.local:9090"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: microservices-monitoring-config
